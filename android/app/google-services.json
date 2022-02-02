@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "465570643237",
+    "project_id": "clothies-6965c",
+    "storage_bucket": "clothies-6965c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465570643237:android:a0d49afbbafb800f7ceecc",
+        "android_client_info": {
+          "package_name": "com.hassam.eshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465570643237-q0ajhj5cr7sdbden3u77td63veje5uql.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUtZh4YQdB5kKhJOsjTaNWrBVDymSKm4Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465570643237-q0ajhj5cr7sdbden3u77td63veje5uql.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
