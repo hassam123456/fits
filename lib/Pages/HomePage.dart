@@ -391,7 +391,7 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildImageSlider(),
+                                // _buildImageSlider(),
                                 SizedBox(
                                   height: 20.0,
                                 ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Counters/cartitemcounter.dart';
+import 'package:e_shop/Pages/HomePage.dart';
 import 'package:e_shop/provider/categoryProvider.dart';
 import 'package:e_shop/provider/productProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,12 +10,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Animation/Splash.dart';
 import 'Authentication/authenication.dart';
 import 'Counters/ItemQuantity.dart';
 import 'Counters/changeAddresss.dart';
 import 'Counters/totalMoney.dart';
-import 'Pages/HomePage.dart';
 
 
 Future<void> main() async {
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
       MaterialApp(
         title: 'GhostWalla',
         debugShowCheckedModeBanner: false,
-        home: AuthenticScreen(),
+        home: HomePage(),
         theme: _buildShrineTheme(),
       ),
     );
@@ -129,7 +128,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     Timer(
         Duration(seconds: 5),
@@ -182,10 +181,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     Text(
                       'LOADING',
-                      // style: TextStyle(
-                      //   color: Colors.white,
-                      //   fontSize: 16.0,
-                      // ),
+
                     ),
                     SizedBox(
                       height: 10.0,
@@ -193,9 +189,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
               )
-
-
-            ],
+     ],
           )
         ],
       ),
