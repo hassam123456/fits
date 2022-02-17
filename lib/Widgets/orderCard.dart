@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Orders/OrderDetailsPage.dart';
-import 'package:e_shop/Models/item.dart';
+
 import 'package:flutter/material.dart';
-import '../Store/storehome.dart';
+import 'package:ghostwala/Models/item.dart';
+
 
 int counter = 0;
 class OrderCard extends StatelessWidget
@@ -49,7 +49,7 @@ class OrderCard extends StatelessWidget
 Widget sourceOrderInfo(ItemModel model, BuildContext context,
     {Color background})
 {
-  width =  MediaQuery.of(context).size.width;
+  var width =  MediaQuery.of(context).size.width;
 
   return  Container(
     color: Colors.grey[100],

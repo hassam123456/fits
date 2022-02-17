@@ -1,12 +1,9 @@
-import 'package:e_shop/Authentication/authenication.dart';
-import 'package:e_shop/Config/config.dart';
-import 'package:e_shop/Pages/HomePage.dart';
-import 'package:e_shop/Store/cart.dart';
-import 'package:e_shop/Orders/myOrders.dart';
-import 'package:e_shop/admin/condition.dart';
-import 'package:flutter/material.dart';
 
-import '../googlemap.dart';
+import 'package:flutter/material.dart';
+import 'package:ghostwala/Authentication/authenication.dart';
+import 'package:ghostwala/Config/config.dart';
+import 'package:ghostwala/Pages/nearbyshop.dart';
+import 'package:ghostwala/admin/condition.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
@@ -65,64 +62,7 @@ class MyDrawer extends StatelessWidget {
                     // style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    Route route = MaterialPageRoute(builder: (c) => HomePage());
-                    Navigator.pushReplacement(context, route);
-                  },
-                ),
-                Divider(
-                  height: 10.0,
-                  // color: Colors.white,
-                  thickness: 6.0,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.map
-                    // color: Colors.white,
-                  ),
-                  title: Text(
-                    "Map",
-                    // style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    Route route = MaterialPageRoute(builder: (c) => Ghome());
-                    Navigator.pushReplacement(context, route);
-                  },
-                ),
-                Divider(
-                  height: 10.0,
-                  // color: Colors.white,
-                  thickness: 6.0,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.reorder,
-                    // color: Colors.white,
-                  ),
-                  title: Text(
-                    "My Orders",
-                    // style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    Route route = MaterialPageRoute(builder: (c) => MyOrders());
-                    Navigator.pushReplacement(context, route);
-                  },
-                ),
-                Divider(
-                  height: 10.0,
-                  // color: Colors.white,
-                  thickness: 6.0,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.shopping_cart,
-                    // color: Colors.white,
-                  ),
-                  title: Text(
-                    "My Cart",
-                    // style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    Route route = MaterialPageRoute(builder: (c) => CartPage());
+                    Route route = MaterialPageRoute(builder: (c) => NearbyShops());
                     Navigator.pushReplacement(context, route);
                   },
                 ),
@@ -142,7 +82,7 @@ class MyDrawer extends StatelessWidget {
                   ),
                   onTap: () {
                     Route route =
-                        MaterialPageRoute(builder: (c) => Condition());
+                        MaterialPageRoute(builder: (c) => Conditions());
                     Navigator.pushReplacement(context, route);
                   },
                 ),

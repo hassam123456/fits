@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Store/Search.dart';
-
 
 class SearchBoxDelegate extends SliverPersistentHeaderDelegate {
   @override
@@ -14,8 +12,8 @@ class SearchBoxDelegate extends SliverPersistentHeaderDelegate {
       InkWell(
         onTap: ()
         {
-          Route route = MaterialPageRoute(builder: (c) => SearchProduct());
-          Navigator.pushReplacement(context, route);
+          // Route route = MaterialPageRoute(builder: (c) => SearchProduct());
+          // Navigator.pushReplacement(context, route);
         },
         child: Container(
           // color: Colors.greenAccent,

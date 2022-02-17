@@ -1,10 +1,9 @@
-import 'package:e_shop/Pages/product.dart';
-import 'package:e_shop/provider/categoryProvider.dart';
-import 'package:e_shop/provider/productProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/Pages/product.dart';
+import 'package:ghostwala/provider/categoryProvider.dart';
+import 'package:ghostwala/provider/productProvider.dart';
 import 'package:provider/provider.dart';
 import 'HomePage.dart';
-import 'SearchCatgeory.dart';
 import 'SingleProduct.dart';
 import 'detailScreen.dart';
 class ListProducts extends StatelessWidget {
@@ -12,9 +11,11 @@ class ListProducts extends StatelessWidget {
 
   final String name;
   final List<Product> snapShot;
+   final String uid;
   ListProducts({
     this.name,
     this.snapShot,
+     this.uid,
   });
   Widget _buildTopName() {
     return Column(
@@ -60,14 +61,14 @@ class ListProducts extends StatelessWidget {
                     thumbnailUrl:  e.thumbnailUrl,
                     name: e.name,
                     price: e.price,
-                    brand: e.brand,
+                    // brand: e.brand,
                   )));
             },
             child: SingleProduct(
               price: e.price,
               thumbnailUrl: e.thumbnailUrl,
               name: e.name,
-              brand: e.brand,
+              // brand: e.brand,
             ),
           ),
         )
@@ -101,15 +102,15 @@ class ListProducts extends StatelessWidget {
               );
             }),
         actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                categoryProvider.getSearchList(list: snapShot);
-                showSearch(context: context, delegate: SearchCategory());
-              }),
+          // IconButton(
+          //     icon: Icon(
+          //       Icons.search,
+          //       color: Colors.black,
+          //     ),
+          //     onPressed: () {
+          //       categoryProvider.getSearchList(list: snapShot);
+          //       showSearch(context: context, delegate: SearchCategory());
+          //     }),
         ],
       ),
       body: Container(

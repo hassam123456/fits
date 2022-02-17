@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Pages/product.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/Pages/product.dart';
 
 
 class CategoryProvider with ChangeNotifier{
@@ -31,7 +31,7 @@ class CategoryProvider with ChangeNotifier{
         .collection("saris")
         .getDocuments();
     dressSnapShot.documents.forEach((element) {
-      sarisData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      sarisData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],);
       newList.add(sarisData);
     }
     );
@@ -56,7 +56,7 @@ class CategoryProvider with ChangeNotifier{
         .collection("bridal")
         .getDocuments();
     dressSnapShot.documents.forEach((element) {
-      bridalData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      bridalData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"]);
       newList.add(bridalData);
     }
     );
@@ -80,7 +80,7 @@ class CategoryProvider with ChangeNotifier{
         .collection("Kurti")
         .getDocuments();
     dressSnapShot.documents.forEach((element) {
-      kurtiData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      kurtiData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"]);
       newList.add(kurtiData);
     }
     );
@@ -102,7 +102,7 @@ class CategoryProvider with ChangeNotifier{
         .collection("Unstiched")
         .getDocuments();
     dressSnapShot.documents.forEach((element) {
-      unstichedData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      unstichedData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"]);
       newList.add(unstichedData);
     }
     );
@@ -120,7 +120,7 @@ class CategoryProvider with ChangeNotifier{
     QuerySnapshot dressSnapShot = await Firestore.instance.collection("category").document("kkjjkdjskjk4zzzz524lklk").collection("stiched")
         .getDocuments();
     dressSnapShot.documents.forEach((element) {
-      shirtData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      shirtData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],);
       newList.add(shirtData);
     }
     );
@@ -137,11 +137,5 @@ void getSearchList({List<Product> list})
   searchList = list;
 }
 
-  List<Product> searchCategoryList(String query){
-    List<Product> searchShirt = shirt.where((element) {
-      return element.brand.toUpperCase().contains(query)||
-          element.brand.toLowerCase().contains(query);
-    }).toList();
-    return searchShirt;
-  }
+
 }

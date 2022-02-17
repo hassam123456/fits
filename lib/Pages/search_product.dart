@@ -1,6 +1,6 @@
-import 'package:e_shop/Pages/product.dart';
-import 'package:e_shop/provider/productProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/Pages/product.dart';
+import 'package:ghostwala/provider/productProvider.dart';
 import 'package:provider/provider.dart';
 
 import 'SingleProduct.dart';

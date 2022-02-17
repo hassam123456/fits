@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Config/config.dart';
-import 'package:e_shop/Counters/cartitemcounter.dart';
-import 'package:e_shop/Pages/HomePage.dart';
-import 'package:e_shop/provider/categoryProvider.dart';
-import 'package:e_shop/provider/productProvider.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/provider/categoryProvider.dart';
+import 'package:ghostwala/provider/productProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Authentication/authenication.dart';
+import 'Config/config.dart';
 import 'Counters/ItemQuantity.dart';
+import 'Counters/cartitemcounter.dart';
 import 'Counters/changeAddresss.dart';
 import 'Counters/totalMoney.dart';
 
 
+
 Future<void> main() async {
-//used to interact with Firebase.initializeApp() needs to call native code to initialize Firebase
+
   WidgetsFlutterBinding.ensureInitialized();
   EcommerceApp.auth = FirebaseAuth.instance;
   EcommerceApp.sharedPreferences = await SharedPreferences.getInstance();
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
       MaterialApp(
         title: 'GhostWalla',
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: AuthenticScreen(),
         theme: _buildShrineTheme(),
       ),
     );
@@ -180,9 +181,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       padding: EdgeInsets.only(top: 20.0),
                     ),
                     Text(
-                      'LOADING',
-
-                    ),
+                      'LOADING',),
                     SizedBox(
                       height: 10.0,
                     )

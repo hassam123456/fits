@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:e_shop/Config/config.dart';
-import 'package:e_shop/Pages/cartmodel.dart';
-import 'package:e_shop/Pages/product.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:ghostwala/Config/config.dart';
+import 'package:ghostwala/Pages/cartmodel.dart';
+import 'package:ghostwala/Pages/product.dart';
 
 
 class ProductProvider with ChangeNotifier {
@@ -107,7 +107,7 @@ notifyListeners();
     QuerySnapshot dressSnapShot = await Firestore.instance.collection("product").document("kkjjkdjskjk4zzzz524lklk").collection("discountProduct")
         .getDocuments();
     dressSnapShot.documents.forEach((element) {
-      newAchivesData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      newAchivesData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"]);
       newList.add(newAchivesData);
     }
     );
@@ -126,18 +126,24 @@ notifyListeners();
 
 //saris
 
-  Future<void> getfeatureData() async{
-    List<Product> newList =[];
-    QuerySnapshot dressSnapShot = await Firestore.instance.collection("product").document("kkjjkdjskjk4zzzz524lklk").collection("popularProduct")
+  Future<void> getfeatureData(String uid) async {
+    List<Product> newList = [];
+    QuerySnapshot dressSnapShot = await Firestore.instance
+        .collection("shops")
+        .document(uid)
+        .collection("products")
         .getDocuments();
     dressSnapShot.documents.forEach((element) {
-      featureData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      featureData = Product(
+          thumbnailUrl: element.data["thumbnailUrl"],
+          price: element.data["price"],
+          name: element.data["name"]);
       newList.add(featureData);
-    }
-    );
+    });
     feature = newList;
     notifyListeners();
   }
+
 
   List<Product> get getfeatureList
   {
@@ -164,7 +170,7 @@ notifyListeners();
 
     dressSnapShot.documents.forEach((element) {
 
-      featureData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      featureData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"]);
 
       newList.add(featureData);
     }
@@ -188,7 +194,7 @@ notifyListeners();
     List<Product> newList =[];
     QuerySnapshot dressSnapShot = await Firestore.instance.collection("discountProduct").getDocuments();
     dressSnapShot.documents.forEach((element) {
-      homeArrivalData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"],brand: element.data["brand"]);
+      homeArrivalData =  Product(thumbnailUrl:  element.data["thumbnailUrl"],price: element.data["price"],name: element.data["name"]);
       newList.add(homeArrivalData);
 
     }

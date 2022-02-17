@@ -1,16 +1,14 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Pages/HomePage.dart';
-import 'package:e_shop/Widgets/customTextField.dart';
-import 'package:e_shop/DialogBox/errorDialog.dart';
-import 'package:e_shop/DialogBox/loadingDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/Config/config.dart';
+import 'package:ghostwala/DialogBox/errorDialog.dart';
+import 'package:ghostwala/DialogBox/loadingDialog.dart';
+import 'package:ghostwala/Pages/nearbyshop.dart';
+import 'package:ghostwala/Widgets/customTextField.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:e_shop/Config/config.dart';
-
 class Register extends StatefulWidget {
   @override
   _RegisterState createState() => _RegisterState();
@@ -203,7 +201,7 @@ class _RegisterState extends State<Register> {
     if (firebaseUser != null) {
       saveUserInfoToFireStore(firebaseUser).then((value) {
         Navigator.pop(context);
-        Route route = MaterialPageRoute(builder: (c) => HomePage());
+        Route route = MaterialPageRoute(builder: (c) => NearbyShops());
         Navigator.pushReplacement(context, route);
       });
     }

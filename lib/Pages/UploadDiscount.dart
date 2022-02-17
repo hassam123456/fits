@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Authentication/authenication.dart';
-import 'package:e_shop/Widgets/loadingWidget.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/Authentication/authenication.dart';
+import 'package:ghostwala/Widgets/loadingWidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'UploadPages.dart';
 

@@ -1,9 +1,5 @@
-import 'package:e_shop/Config/config.dart';
-import 'package:e_shop/Store/cart.dart';
-import 'package:e_shop/Counters/cartitemcounter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget
 {
@@ -17,7 +13,6 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget
       centerTitle: true,
       title: Text(
         "GhostWalla",
-        //\ style: TextStyle(fontSize: 55.0, color: Colors.white, fontFamily: "Signatra"),
       ),
       bottom: bottom,
       actions: [
@@ -27,8 +22,8 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget
               icon: Icon(Icons.shopping_cart,),
               onPressed: ()
               {
-                Route route = MaterialPageRoute(builder: (c) => CartPage());
-                Navigator.pushReplacement(context, route);
+                // Route route = MaterialPageRoute(builder: (c) => CartPage());
+                // Navigator.pushReplacement(context, route);
               },
             ),
             Positioned(
@@ -39,20 +34,20 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget
                     size: 20.0,
                     // color: Colors.white,
                   ),
-                  Positioned(
-                    top: 3.0,
-                    bottom: 4.0,
-                    left: 4.0,
-                    child: Consumer<CartItemCounter>(
-                      builder: (context, counter, _)
-                      {
-                        return Text(
-                          (EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList).length-1).toString(),
-                          // style: TextStyle(color: Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),
-                        );
-                      },
-                    ),
-                  ),
+                  // Positioned(
+                  //   top: 3.0,
+                  //   bottom: 4.0,
+                  //   left: 4.0,
+                  //   child: Consumer<CartItemCounter>(
+                  //     builder: (context, counter, _)
+                  //     {
+                  //       return Text(
+                  //         (EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList).length-1).toString(),
+                  //         // style: TextStyle(color: Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -61,7 +56,5 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget
       ],
     );
   }
-
-
   Size get preferredSize => bottom==null?Size(56,AppBar().preferredSize.height):Size(56, 80+AppBar().preferredSize.height);
 }

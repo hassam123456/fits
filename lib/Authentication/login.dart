@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Admin/adminLogin.dart';
-import 'package:e_shop/Pages/HomePage.dart';
-import 'package:e_shop/Widgets/customTextField.dart';
-import 'package:e_shop/DialogBox/errorDialog.dart';
-import 'package:e_shop/DialogBox/loadingDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:e_shop/Config/config.dart';
+import 'package:ghostwala/Config/config.dart';
+import 'package:ghostwala/DialogBox/errorDialog.dart';
+import 'package:ghostwala/DialogBox/loadingDialog.dart';
+import 'package:ghostwala/Pages/nearbyshop.dart';
+import 'package:ghostwala/Widgets/customTextField.dart';
+import 'package:ghostwala/admin/adminLogin.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -109,7 +108,7 @@ class _LoginState extends State<Login> {
 
               )),
               label: Text(
-                "I'm Admin",
+                "I'm ShopKeeper",
 
               ),
             )],
@@ -149,7 +148,7 @@ class _LoginState extends State<Login> {
     if (firebaseUser != null) {
       readData(firebaseUser).then((s) {
         Navigator.pop(context);
-        Route route = MaterialPageRoute(builder: (c) => HomePage());
+        Route route = MaterialPageRoute(builder: (c) =>   NearbyShops());
         Navigator.pushReplacement(context, route);
       });
     }

@@ -1,8 +1,10 @@
-import 'package:e_shop/Pages/product.dart';
-import 'package:e_shop/Store/cart.dart';
-import 'package:e_shop/Widgets/myDrawer.dart';
-import 'package:e_shop/provider/categoryProvider.dart';
-import 'package:e_shop/provider/productProvider.dart';
+
+import 'package:geocoding/geocoding.dart';
+import 'package:ghostwala/Pages/product.dart';
+import 'package:ghostwala/Widgets/myDrawer.dart';
+import 'package:ghostwala/provider/categoryProvider.dart';
+import 'package:ghostwala/provider/productProvider.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:carousel_pro/carousel_pro.dart';
@@ -57,17 +59,19 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "Beef",),
+                    "Beef",
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (ctx) => ListProducts(
-                                name: "Beef",
-                                snapShot: newAchivesProduct,
-                              )));
+                            name: "Beef",
+                            snapShot: newAchivesProduct,
+                          )));
                     },
                     child: Text(
-                      "View more",),
+                      "View more",
+                    ),
                   )
                 ],
               )
@@ -79,64 +83,66 @@ class _HomePageState extends State<HomePage> {
         ),
         Row(
             children: productProvider.getHomeArrivalList.map((e) {
-          return Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
+              return Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (ctx) => DetailScreen(
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (ctx) => DetailScreen(
+                                          thumbnailUrl: e.thumbnailUrl,
+                                          price: e.price,
+                                          name: e.name,
+                                        //  brand: e.brand,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: SingleProduct(
                                       thumbnailUrl: e.thumbnailUrl,
                                       price: e.price,
                                       name: e.name,
-                                      brand: e.brand,
-                                    ),
+                                      // desc: e.brand
                                   ),
-                                );
-                              },
-                              child: SingleProduct(
-                                  thumbnailUrl: e.thumbnailUrl,
-                                  price: e.price,
-                                  name: e.name,
-                                  brand: e.brand),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (ctx) => DetailScreen(
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (ctx) => DetailScreen(
+                                        thumbnailUrl: e.thumbnailUrl,
+                                        price: e.price,
+                                        name: e.name,
+                                        // brand: e.brand,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: SingleProduct(
                                     thumbnailUrl: e.thumbnailUrl,
                                     price: e.price,
                                     name: e.name,
-                                    brand: e.brand,
-                                  ),
+                                //    desc: e.brand
                                 ),
-                              );
-                            },
-                            child: SingleProduct(
-                                thumbnailUrl: e.thumbnailUrl,
-                                price: e.price,
-                                name: e.name,
-                                brand: e.brand),
-                          )
-                        ],
-                      ),
-                    )
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-          );
-        }).toList()),
+              );
+            }).toList()),
       ],
     );
   }
@@ -152,26 +158,24 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Text(
               "Muttons",
-
             ),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (ctx) => ListProducts(
-                          name: "Muttons",
-                          snapShot: featureProduct,
-                        )));
+                      name: "Muttons",
+                      snapShot: featureProduct,
+                    )));
               },
               child: Text(
                 "View more",
-
               ),
             )
           ],
         ),
-       SizedBox(
-        height: 10.0,
-       ),
+        SizedBox(
+          height: 10.0,
+        ),
         Row(
           children: productProvider.getHomefeatureList.map((e) {
             return Expanded(
@@ -186,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                               thumbnailUrl: e.thumbnailUrl,
                               price: e.price,
                               name: e.name,
-                              brand: e.brand,
+                            //  brand: e.brand,
                             ),
                           ),
                         );
@@ -195,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                         thumbnailUrl: e.thumbnailUrl,
                         price: e.price,
                         name: e.name,
-                        brand: e.brand,
+                        // desc: e.brand,
                       ),
                     ),
                   ),
@@ -207,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                             thumbnailUrl: e.thumbnailUrl,
                             price: e.price,
                             name: e.name,
-                            brand: e.brand,
+                            // brand: e.brand,
                           ),
                         ),
                       );
@@ -216,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                       thumbnailUrl: e.thumbnailUrl,
                       price: e.price,
                       name: e.name,
-                      brand: e.brand,
+                      //desc: e.brand,
                     ),
                   ),
                 ],
@@ -246,14 +250,15 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-   Widget _buildCategory() {
+
+  Widget _buildCategory() {
     List<Product> stiched = provider.getShirtList;
     List<Product> unstiched = provider.getunstichedList;
     List<Product> kurti = provider.getkurtiList;
     List<Product> bridal = provider.getbridalList;
     List<Product> saris = provider.getsarisList;
     return Container(
-        child: Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
@@ -276,18 +281,18 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => ListProducts(
-                                name: "stiched",
-                                snapShot: stiched,
-                              )));
+                            name: "stiched",
+                            snapShot: stiched,
+                          )));
                     },
                     child: _buildCategoryFeatured("8A.jpg")),
                 GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => ListProducts(
-                                name: "unstiched",
-                                snapShot: unstiched,
-                              )));
+                            name: "unstiched",
+                            snapShot: unstiched,
+                          )));
                     },
                     child: _buildCategoryFeatured(
                       "3A.jpg",
@@ -296,27 +301,27 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => ListProducts(
-                                name: "kurti",
-                                snapShot: kurti,
-                              )));
+                            name: "kurti",
+                            snapShot: kurti,
+                          )));
                     },
                     child: _buildCategoryFeatured("9A.jpg")),
                 GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => ListProducts(
-                                name: "bridal",
-                                snapShot: bridal,
-                              )));
+                            name: "bridal",
+                            snapShot: bridal,
+                          )));
                     },
                     child: _buildCategoryFeatured("2A.jpg")),
                 GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => ListProducts(
-                                name: "saris",
-                                snapShot: saris,
-                              )));
+                            name: "saris",
+                            snapShot: saris,
+                          )));
                     },
                     child: _buildCategoryFeatured("3A.jpg")),
               ],
@@ -341,7 +346,7 @@ class _HomePageState extends State<HomePage> {
     productProvider.gethomefeatureData();
     productProvider.gethomeArrivalData();
     productProvider.getnewAchivesData();
-    productProvider.getfeatureData();
+    productProvider.getfeatureData('');
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -355,15 +360,14 @@ class _HomePageState extends State<HomePage> {
           ),
           centerTitle: true,
           elevation: 0.0,
-
           actions: <Widget>[
             IconButton(
                 icon: Icon(
                   Icons.search,
-                   color: Colors.black,
+                  color: Colors.black,
                 ),
                 onPressed: () {
-                  showSearch(context: context, delegate: SearchCategory());
+                  // showSearch(context: context, delegate: SearchCategory());
                 }),
             IconButton(
               icon: Icon(
@@ -372,8 +376,8 @@ class _HomePageState extends State<HomePage> {
                 // color: Colors.white,
               ),
               onPressed: () {
-                Route route = MaterialPageRoute(builder: (c) => CartPage());
-                Navigator.pushReplacement(context, route);
+                // Route route = MaterialPageRoute(builder: (c) => CartPage());
+                // Navigator.pushReplacement(context, route);
               },
             ),
           ],
@@ -384,25 +388,24 @@ class _HomePageState extends State<HomePage> {
               height: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: ListView(
-                      children: [
-                        Expanded(
-                            child: Container(
-                          width: double.infinity,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // _buildImageSlider(),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                _buildFeature(context),
-                                _buildNewArchives(context),
-                              ]),
-                        )),
-                      ],
-                  )
-            ),
-          ));
+                children: [
+                  Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // _buildImageSlider(),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              _buildFeature(context),
+                              _buildNewArchives(context),
+                            ]),
+                      )),
+                ],
+              )),
+        ));
   }
 }
 

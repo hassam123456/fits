@@ -1,6 +1,6 @@
 import 'package:badges/badges.dart';
-import 'package:e_shop/provider/productProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/provider/productProvider.dart';
 
 import 'package:provider/provider.dart';
 

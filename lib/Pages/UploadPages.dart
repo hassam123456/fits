@@ -1,14 +1,11 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Authentication/authenication.dart';
-import 'package:e_shop/UploadProducts/productDiscountUpload.dart';
-import 'package:e_shop/UploadProducts/productPopularUpload.dart';
-import 'package:e_shop/Widgets/loadingWidget.dart';
-import 'package:e_shop/admin/uploadItems.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:ghostwala/Authentication/authenication.dart';
+import 'package:ghostwala/Widgets/loadingWidget.dart';
 import 'package:image_picker/image_picker.dart';
-import 'UploadDiscount.dart';
 
 class UploadPages extends StatefulWidget
 {
@@ -72,11 +69,9 @@ class _UploadPageState extends State<UploadPages> with AutomaticKeepAliveClientM
         child: Container(
           height: 5000,
           child: Column(
-
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.shop_two,color: Colors.black,size: 20.0,),
-
               Padding(
                 padding: EdgeInsets.only(top: 5.0),
                 child: ElevatedButton(
@@ -85,114 +80,6 @@ class _UploadPageState extends State<UploadPages> with AutomaticKeepAliveClientM
                   onPressed: ()=> takeImage(context),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("Upload Rental ",style: TextStyle(color: Colors.black,fontSize: 20.0),),
-                  // color: Colors.cyan,
-                  onPressed: () {
-                    Route route = MaterialPageRoute(builder: (c) => UploadPage());
-                    Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadHomePopularItems",
-                    style: TextStyle(color: Colors.black,fontSize: 20.0
-                  ),),
-                  // color: Colors.cyan,
-                  onPressed: () {
-                    Route route = MaterialPageRoute(builder: (c) => UploadPaged());
-                    Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadPopularItems",),
-                  onPressed: () {
-                    Route route = MaterialPageRoute(builder: (c) => popularProduct());
-                    Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadDiscountItems",
-                  ),
-                  onPressed: () {
-                    Route route = MaterialPageRoute(builder: (c) => DiscountProduct());
-                    Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadStichedCategories",style: TextStyle(color: Colors.white,fontSize: 20.0),),
-                  onPressed: () {
-                    // Route route = MaterialPageRoute(builder: (c) => Stiched());
-                    // Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadUnStichedCategories",style: TextStyle(color: Colors.white,fontSize: 20.0),),
-                  // color: Colors.cyan,
-                  onPressed: () {
-                    // Route route = MaterialPageRoute(builder: (c) => UnStiched());
-                    // Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadKurtiCategories",style: TextStyle(color: Colors.black,fontSize: 20.0),),
-                  // color: Colors.cyan,
-                  onPressed: () {
-                    // Route route = MaterialPageRoute(builder: (c) => Kurti());
-                    // Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadBridalCategories",
-                    style: TextStyle(color: Colors.black,fontSize: 20.0),
-                  ),
-                  // color: Colors.cyan,
-                  onPressed: () {
-                    // Route route = MaterialPageRoute(builder: (c) => Bridal());
-                    // Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: ElevatedButton(
-                  child: Text("UploadSarisCategories",style: TextStyle(color: Colors.black,fontSize: 20.0),),
-                  // color: Colors.cyan,
-                  onPressed: () {
-                    // Route route = MaterialPageRoute(builder: (c) => Saris());
-                    // Navigator.pushReplacement(context, route);
-                  },
-                ),
-              ),
-           //  Container(
-           // //   height: 220,
-           //    child: UploadPages(),
-           //  )
             ],
           ),
         ),
@@ -236,11 +123,9 @@ class _UploadPageState extends State<UploadPages> with AutomaticKeepAliveClientM
       file = imageFile;
     });
   }
-
   pickPhotoFromGallery() async{
     Navigator.pop(context);
     File imageFile= await ImagePicker.pickImage(source: ImageSource.gallery);
-
     setState(() {
       file = imageFile;
     });
@@ -373,13 +258,17 @@ class _UploadPageState extends State<UploadPages> with AutomaticKeepAliveClientM
 
   }
 
-  saveItemInfo( String downloadUrl){
-    final itemsRef = Firestore.instance.collection("discountProduct");
+  saveItemInfo( String downloadUrl) async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseUser user = await _auth.currentUser();
+    final userid = user.uid;
+    final itemsRef = Firestore.instance.collection("shops").document(userid).collection("products");
     itemsRef.document(productId).setData({
       "price" : int.parse(_priceTextEditingController.text),
       "thumbnailUrl" : downloadUrl,
       "name" : _nameTextEditingController.text.trim(),
-      "brand" : _brandTextEditingController.text.trim(),
+
+
     });
     setState(() {
       file = null;

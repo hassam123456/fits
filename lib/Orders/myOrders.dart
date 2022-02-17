@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Pages/HomePage.dart';
 import 'package:flutter/material.dart';
-import 'package:e_shop/Config/config.dart';
+import 'package:ghostwala/Config/config.dart';
+import 'package:ghostwala/Pages/HomePage.dart';
 import '../Widgets/loadingWidget.dart';
 import '../Widgets/orderCard.dart';
 

@@ -1,174 +1,230 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Config/config.dart';
-import 'package:e_shop/provider/productProvider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'HomePage.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'cartSingleProduct.dart';
 import 'cartmodel.dart';
-class  CheckOut extends StatefulWidget {
+import 'cartscreen.dart';
+import 'nearbyshop.dart';
 
+class CheckOut extends StatefulWidget {
+  final String thumbnailUrl;
+  final String name;
+  final int price;
+  final int quantity;
+  final String address;
+
+  const CheckOut(
+      {Key key,
+      this.name,
+      this.price,
+      this.thumbnailUrl,
+      this.quantity,
+      this.address})
+      : super(key: key);
 
   @override
   _CheckOutState createState() => _CheckOutState();
 }
 
 class _CheckOutState extends State<CheckOut> {
-  int count =1;
+  int count = 1;
   TextStyle mystyle = TextStyle(
     fontSize: 18,
   );
   double total;
   @override
-  Widget _buildBotttomDetail({String startName, String lastName}){
-    return    Row(
+  Widget _buildBotttomDetail({String startName, String lastName}) {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(startName,style: mystyle,),
-        Text(lastName,
-          style: mystyle,),
- ],
+        Text(
+          startName,
+          style: mystyle,
+        ),
+        Text(
+          lastName,
+          style: mystyle,
+        ),
+      ],
     );
   }
+
+  Position currentLocation;
+  String Address = "";
   List<CartModel> myList;
   void initState() {
-    productProvider = Provider.of<ProductProvider>(context, listen: false);
-    myList = productProvider.checkOutModelList;
     super.initState();
+    Geolocator.getCurrentPosition().then((value) async {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(value.latitude, value.longitude);
+      print(placemarks);
+      Placemark place = placemarks[0];
+      setState(() {
+        Address =
+            '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+      });
+    });
   }
+
   @override
   Widget build(BuildContext context) {
+    int subTotal = widget.price;
+    // double discount = 3;
+    // double discountRupees;
+    // double shipping = 60;
 
-    double subTotal = 0;
-    double discount = 3;
-    double discountRupees;
-    double shipping = 60;
-
-    productProvider = Provider.of<ProductProvider>(context);
-    productProvider.getCheckOutModelList.forEach((element) {
-      subTotal += element.price * element.quantity;
-    });
-
-    discountRupees = discount / 100 * subTotal;
-    total = subTotal + shipping - discountRupees;
-    if (productProvider.checkOutModelList.isEmpty) {
-      total = 0.0;
-      discount = 0.0;
-      shipping = 0.0;
-    }
+    // discountRupees = discount / 100 * subTotal;
+    // total = subTotal + shipping - discountRupees;
     return Scaffold(
         bottomNavigationBar: Container(
           height: 70,
           width: 100,
           margin: EdgeInsets.symmetric(horizontal: 10),
-          padding: EdgeInsets.only(
-              bottom: 10
-          ),
+          padding: EdgeInsets.only(bottom: 10),
           child: Column(
             children: [
               Container(
                 child: ElevatedButton(
-
                     child: Text(
                       "Order Placed",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
-                    onPressed: ()
-                    {
-                        Firestore.instance.collection("Orders").add({
-                          "Product": productProvider.getCheckOutModelList
-                              .map((c) => {
-                            "ProductName": c.name,
-                            "ProductPrice": c.price,
-                            "ProductQuetity": c.quantity,
-                            "ProductImage": c.thumbnailUrl,
-                            "Brand": c.brand,
-                          })
-                              .toList(),
-
-                        });
-                        Route route = MaterialPageRoute(builder: (c) => HomePage());
-                        Navigator.pushReplacement(context, route);
-
-                                }
-
-                ),
+                    onPressed: () {
+                      showAlertDialog(context);
+                    }),
               ),
             ],
           ),
         ),
         appBar: AppBar(
-
-          flexibleSpace: Container(
-          // color: Colors.cyan,
-          ),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CartScreen(
+                          name: widget.name,
+                          price: widget.price,
+                          thumbnailUrl: widget.thumbnailUrl,
+                          address: widget.address,
+                        )));
+              },
+              icon: Icon(Icons.arrow_back)),
+          flexibleSpace: Container(),
           centerTitle: true,
           title: Text(
             "CheckOutPage",
-            style: TextStyle(
-                fontSize: 55.0, color: Colors.black, fontFamily: "Signatra"),
           ),
         ),
         body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15,
-            vertical: 15,
-          ),
-     child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-    Expanded(
-      flex: 2,
-      child: Container(
-        child: ListView.builder(
-        itemCount: productProvider.getCheckOutModelListLength,
-
-        itemBuilder: (ctx,myIndex) {
-
-
-          return CartSingleProduct(
-            index: myIndex,
-            isCount: true,
-            thumbnailUrl: productProvider.getCheckOutModelList[myIndex].thumbnailUrl,
-            name: productProvider.getCheckOutModelList[myIndex].name,
-            price: productProvider.getCheckOutModelList[myIndex].price,
-            quantity: productProvider.getCheckOutModelList[myIndex].quantity,
-          );
-        }),
-      ),
-    ),
-
-            Expanded(
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _buildBotttomDetail(
-                      startName: "Subtotal",
-                      lastName: "\Rs. ${subTotal.toStringAsFixed(2)}",
-                    ),
-                    _buildBotttomDetail(
-                      startName: "Discount",
-                      lastName: "\Rs.${discount.toStringAsFixed(2)}%",
-                    ),
-                    _buildBotttomDetail(
-                      startName: "Shipping",
-                      lastName: "\Rs. ${shipping.toStringAsFixed(2)}",
-                    ),
-                    _buildBotttomDetail(
-                      startName: "Total",
-                      lastName: "\Rs. ${total.toStringAsFixed(2)}",
-                    ),
-                  ],
+            padding: EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 15,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    child: ListView.builder(
+                        itemCount: 1,
+                        itemBuilder: (ctx, myIndex) {
+                          return CartSingleProduct(
+                            index: myIndex,
+                            isCount: true,
+                            thumbnailUrl: widget.thumbnailUrl,
+                            name: widget.name,
+                            price: widget.price,
+                            quantity: widget.quantity,
+                          );
+                        }),
+                  ),
                 ),
-              ),
-            )],
-
+                Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Current Address :',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          Address,
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
+                    )),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        _buildBotttomDetail(
+                          startName: "Subtotal",
+                          lastName: "\Rs. ${subTotal.toStringAsFixed(2)}",
+                        ),
+                        // _buildBotttomDetail(
+                        //   startName: "Discount",
+                        //   lastName: "\Rs.${discount.toStringAsFixed(2)}%",
+                        // ),
+                        // _buildBotttomDetail(
+                        //   startName: "Shipping",
+                        //   lastName: "\Rs. ${shipping.toStringAsFixed(2)}",
+                        // ),
+                        // _buildBotttomDetail(
+                        //   startName: "Total",
+                        //   lastName: "\Rs. ${total.toStringAsFixed(2)}",
+                        // ),
+                      ],
+                    ),
+                  ),
                 )
-    ));
-
-                  }
+              ],
+            )));
   }
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Route route = MaterialPageRoute(builder: (c) => NearbyShops());
+        Navigator.pushReplacement(context, route);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () {
+        Firestore.instance.collection("shopOrders").add({
+          "ProductName": widget.name,
+          "ProductPrice": widget.price,
+          "ProductQuetity": widget.quantity,
+          "ProductImage": widget.thumbnailUrl,
+          "userAddress": Address
+        });
+        Route route = MaterialPageRoute(builder: (c) => NearbyShops());
+        Navigator.pushReplacement(context, route);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text("Would you like to place order?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+}

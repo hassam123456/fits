@@ -44,7 +44,6 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
         ),
         body: Container(
           child: TabBarView(
-
             children: [
               Login(),
               Register(),

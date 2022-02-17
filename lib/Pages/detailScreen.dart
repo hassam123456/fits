@@ -1,142 +1,34 @@
-import 'package:e_shop/provider/productProvider.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:ghostwala/Pages/shopproduct.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'HomePage.dart';
 import 'cartscreen.dart';
+
+int count = 1;
 
 class DetailScreen extends StatefulWidget {
   final String thumbnailUrl;
   final String name;
   final int price;
-  final String brand;
+  final String address;
+  final String uid;
 
   const DetailScreen(
-      {Key key, this.name, this.price, this.thumbnailUrl, this.brand})
+      {Key key,
+      this.name,
+      this.price,
+      this.thumbnailUrl,
+      this.address,
+      this.uid})
       : super(key: key);
 
   @override
-  _DetailScreenState createState() => _DetailScreenState();
+  _ProductDetailState createState() => _ProductDetailState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
-  int count = 1;
-  ProductProvider productProvider;
-
-  Widget _buildColorProduct({Color color}) {
-    return Container(
-      height: 40,
-      width: 40,
-      color: color,
-    );
-  }
-
-  List<bool> sized = [true, false, false, false];
-  List<bool> colored = [true, false, false, false];
-  int sizeIndex = 0;
-
-  String size;
-
-  void getSize() {
-    if (sizeIndex == 0) {
-      setState(() {
-        size = "S";
-      });
-    } else if (sizeIndex == 1) {
-      setState(() {
-        size = "M";
-      });
-    } else if (sizeIndex == 2) {
-      setState(() {
-        size = "L";
-      });
-    } else if (sizeIndex == 3) {
-      setState(() {
-        size = "XL";
-      });
-    }
-  }
-
-  int colorIndex = 0;
-  String color;
-
-  void getColor() {
-    if (colorIndex == 0) {
-      setState(() {
-        color = "Light Blue";
-      });
-    } else if (colorIndex == 1) {
-      setState(() {
-        color = "Light Green";
-      });
-    } else if (colorIndex == 2) {
-      setState(() {
-        color = "Light Yellow";
-      });
-    } else if (colorIndex == 3) {
-      setState(() {
-        color = "Cyan";
-      });
-    }
-  }
-
-  Widget _buildSizePart() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Size",
-          style: myStyle,
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Container(
-          width: 265,
-          child: ToggleButtons(
-            children: [
-              Text("S"),
-              Text("M"),
-              Text("L"),
-              Text("XL"),
-            ],
-            onPressed: (int index) {
-              setState(() {
-                for (int indexBtn = 0; indexBtn < sized.length; indexBtn++) {
-                  if (indexBtn == index) {
-                    sized[indexBtn] = true;
-                  } else {
-                    sized[indexBtn] = false;
-                  }
-                }
-              });
-              setState(() {
-                sizeIndex = index;
-              });
-            },
-            isSelected: sized,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSizeProduct({String name}) {
-    return Container(
-      height: 60,
-      width: 60,
-      color: Color(0xffff2f2f2),
-      child: Center(
-        child: Text(
-          name,
-          style: TextStyle(
-            fontSize: 17,
-          ),
-        ),
-      ),
-    );
-  }
-
+class _ProductDetailState extends State<DetailScreen> {
   final TextStyle myStyle = TextStyle(fontSize: 18);
 
   Widget _buildDiscription() {
@@ -161,7 +53,7 @@ class _DetailScreenState extends State<DetailScreen> {
           height: 10,
         ),
         Text(
-          "Quantity",
+          "Quantity(Kg)",
           style: myStyle,
         ),
         SizedBox(
@@ -217,10 +109,6 @@ class _DetailScreenState extends State<DetailScreen> {
                 style: myStyle,
               ),
               Text(
-                widget.brand,
-                style: myStyle,
-              ),
-              Text(
                 "\Rs ${widget.price.toString()}",
                 style: TextStyle(
                   color: Colors.black,
@@ -238,11 +126,32 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Widget _buildColorsProduct({Color color}) {
+  List<Location> pos;
+  Widget _buildmap(String name) {
+    Completer<GoogleMapController> _controller = Completer();
     return Container(
-      height: 60,
-      width: 60,
-      color: color,
+      height: 200,
+      child: Scaffold(
+        body: GoogleMap(
+          markers: {
+            Marker(
+              markerId: MarkerId('origin'),
+              infoWindow: InfoWindow(title: name),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueGreen),
+              position: LatLng(pos[0].latitude, pos[0].longitude),
+            )
+          },
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(pos[0].latitude, pos[0].longitude),
+            zoom: 14.4746,
+          ),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+        ),
+      ),
     );
   }
 
@@ -260,45 +169,16 @@ class _DetailScreenState extends State<DetailScreen> {
                 "Check Out",
               ),
               onPressed: () {
-                productProvider.getCardData(
-                  thumbnailUrl: widget.thumbnailUrl,
-                  name: widget.name,
-                  price: widget.price,
-                  quantity: count,
-                  brand: widget.brand,
-                );
-
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (ctx) => CartScreen(),
+                  builder: (ctx) => CartScreen(
+                    name: widget.name,
+                    price: widget.price * count,
+                    thumbnailUrl: widget.thumbnailUrl,
+                    quantity: count,
+                    address: widget.address,
+                  ),
                 ));
               }),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildColorPart() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Color",
-          style: myStyle,
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Container(
-          width: 260,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildColorProduct(color: Colors.green[200]),
-              _buildColorProduct(color: Colors.blue[200]),
-              _buildColorProduct(color: Colors.yellow[200]),
-              _buildColorProduct(color: Colors.cyan[300]),
-            ],
-          ),
         ),
       ],
     );
@@ -309,7 +189,7 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Row(
         children: [
           Container(
-            width: 400,
+            width: MediaQuery.of(context).size.width,
             child: Card(
               child: Container(
                 padding: EdgeInsets.all(13),
@@ -331,15 +211,28 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    locationFromAddress(widget.address).then((res) {
+      setState(() {
+        pos = res;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    productProvider = Provider.of<ProductProvider>(context);
+    // productProvider = Provider.of<ProductProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (ctx) => HomePage()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    ShopProducts(widget.uid, widget.address)));
           },
         ),
         flexibleSpace: Container(
@@ -348,8 +241,6 @@ class _DetailScreenState extends State<DetailScreen> {
         centerTitle: true,
         title: Text(
           "DetailPage",
-          // style: TextStyle(
-          //     fontSize: 55.0, color: Colors.black, fontFamily: "Signatra"),
         ),
         actions: <Widget>[],
       ),
@@ -366,8 +257,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     children: [
                       _buildNametoDescription(),
                       _buildDiscription(),
-                      _buildSizePart(),
-                      _buildColorPart(),
+                      _buildmap(widget.name),
                       _buildQuantityPart(),
                       SizedBox(
                         height: 15,

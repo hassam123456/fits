@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Authentication/authenication.dart';
-import 'package:e_shop/Pages/UploadPages.dart';
-import 'package:e_shop/Widgets/customTextField.dart';
-import 'package:e_shop/DialogBox/errorDialog.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-
-
+import 'package:ghostwala/Authentication/authenication.dart';
+import 'package:ghostwala/Authentication/shopregister.dart';
+import 'package:ghostwala/Authentication/shopuploadproducts.dart';
+import 'package:ghostwala/DialogBox/errorDialog.dart';
 import '../Widgets/customTextField.dart';
 
 
@@ -37,7 +36,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
 {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _adminIDTextEditingController = TextEditingController();
+  final TextEditingController _emailTextEditingController = TextEditingController();
   final TextEditingController _passwordTextEditingController = TextEditingController();
 
   @override
@@ -69,9 +68,9 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
               child: Column(
                 children: [
                   CustomTextField(
-                    controller: _adminIDTextEditingController,
+                    controller: _emailTextEditingController,
                     data: Icons.person,
-                    hintText: "Id",
+                    hintText: "email",
                     isObsecure: false,
                   ),
                   CustomTextField(
@@ -88,7 +87,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
             ),
             ElevatedButton(
               onPressed: () {
-                _adminIDTextEditingController.text.isNotEmpty
+                _emailTextEditingController.text.isNotEmpty
                     && _passwordTextEditingController.text.isNotEmpty
                     ? loginAdmin()
                     : showDialog(
@@ -101,6 +100,22 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
               },
               // color: Colors.pink,
               child: Text("Login", ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text(
+                'Not registered yet ? '
+              ),
+                TextButton(onPressed:() {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ShopRegister()));
+
+                }, child: Text(
+                  'Click to register',style: TextStyle(
+                  color: Colors.blue
+                ),
+                ))
+              ],
             ),
             SizedBox(
               height: 50.0,
@@ -116,7 +131,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
             ElevatedButton.icon(
               onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthenticScreen())),
               icon: (Icon(Icons.nature_people)),
-              label: Text("i'm not Admin"),),
+              label: Text("i'm not ShopKeeper"),),
 
             SizedBox(
               height: 50.0,
@@ -127,28 +142,54 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
     );
   }
   loginAdmin()
-  {
-    Firestore.instance.collection("admins").getDocuments().then((snapshot){
-      snapshot.documents.forEach((result) {
-        if(result.data["id"] != _adminIDTextEditingController.text.trim())
-        {
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text("your id is not correct."),));
-        }
-        else if(result.data["password"] != _passwordTextEditingController.text.trim())
-        {
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text("your password is not correct."),));
-        }
-        else
-        {
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text("Welcome Dear Admin, " + result.data["name"]),));
-           setState(() {
-            _adminIDTextEditingController.text = "";
-            _passwordTextEditingController.text = "";
-          });
-           Route route = MaterialPageRoute(builder: (c) => UploadPages());
-          Navigator.pushReplacement(context, route);
-        }
+  async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    dynamic result = await _auth.signInWithEmailAndPassword(
+        email: _emailTextEditingController.text.trim(),
+        password: _passwordTextEditingController.text.trim());
+
+    if (result == null) {
+      setState(() {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("your password is not correct."),
+        ));
       });
-    });
-  }
-}
+    } else {
+      Firestore.instance.collection("shops").getDocuments().then((snapshot) {
+        snapshot.documents.forEach((result) async {
+          if (result.data["email"] != _emailTextEditingController.text.trim()) {
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text("your email is not correct."),));
+          }
+          else if (result.data["password"] !=
+              _passwordTextEditingController.text.trim()) {
+            // ignore: deprecated_member_use
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text("your password is not correct."),));
+          }
+          else {
+            Route route = MaterialPageRoute(builder: (c) => ShopUploadPage());
+            Navigator.pushReplacement(context, route);
+            // final FirebaseAuth _auth = FirebaseAuth.instance;
+            // dynamic result = await _auth.signInWithEmailAndPassword(
+            //     email: _emailTextEditingController.text.trim(),
+            //     password: _passwordTextEditingController.text.trim());
+            //
+            // if (result == null) {
+            //   setState(() {
+            //     Scaffold.of(context).showSnackBar(SnackBar(
+            //       content: Text("your password is not correct."),
+            //     ));
+            //   });
+            // } else {
+            //   Scaffold.of(context).showSnackBar(SnackBar(
+            //     content: Text("Welcome Dear Admin, " + result.data["name"]),
+            //   ));
+            //   setState(() {
+            //     _emailTextEditingController.text = "";
+            //     _passwordTextEditingController.text = "";
+          }
+        });
+      });
+    }
+  }}
